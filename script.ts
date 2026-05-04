@@ -58,9 +58,22 @@ function addGridFunctionality(gridContainer: Element): void
             if (event.target.classList.contains("colored")) return;
 
             event.target.classList.add("colored");
-            event.target.style.backgroundColor = "black";
+            event.target.style.backgroundColor = GetRandomColor();
         }
     });
+}
+
+
+function GetRandomColor(): string
+{
+    const randomRGBValues = [];
+
+    for (let i = 0; i < 3; i++)
+    {
+        randomRGBValues.push(Math.floor(Math.random() * 256));
+    }
+
+    return `RGB(${randomRGBValues.join(",")})`
 }
 
 
