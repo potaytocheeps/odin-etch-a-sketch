@@ -1,16 +1,33 @@
-const gridContainer = document.querySelector("#grid-container");
+initializeEtchASketch();
 
-if (gridContainer !== null)
+
+function initializeEtchASketch()
 {
-    createGrid(gridContainer);
-    addGridFunctionality(gridContainer);
+    const gridContainer = document.querySelector("#grid-container");
+    const createGridButton = document.querySelector("#create-grid-button");
+
+    if (createGridButton)
+    {
+        createGridButton.addEventListener("click", () => {
+            if (gridContainer)
+            {
+                const gridSize = getGridSizeInput();
+
+                // Keep current grid if user canceled prompt asking for grid size
+                if (gridSize === null) return;
+
+                if (gridContainer.hasChildNodes()) deleteGrid(gridContainer);
+
+                createGrid(gridContainer, gridSize);
+                addGridFunctionality(gridContainer);
+            }
+        });
+    }
 }
 
 
-function createGrid(gridContainer: Element)
+function createGrid(gridContainer: Element, gridSize: number): void
 {
-    const gridSize = 16;
-
     for (let row = 0; row < gridSize; row++)
     {
         let row = document.createElement("div");
@@ -29,12 +46,12 @@ function createGrid(gridContainer: Element)
 }
 
 
-function addGridFunctionality(gridContainer: Element)
+function addGridFunctionality(gridContainer: Element): void
 {
     gridContainer.addEventListener("mouseover", (event) => {
         if (event.target instanceof HTMLDivElement)
         {
-            // Prevents a scenario where the whole grid container element would be
+            // Prevent a scenario where the whole grid container element would be
             // colored at once when the target of the event is the grid container itself
             if (event.target.id === "grid-container") return;
 
@@ -44,4 +61,32 @@ function addGridFunctionality(gridContainer: Element)
             event.target.style.backgroundColor = "black";
         }
     });
+}
+
+
+function getGridSizeInput(): number | null
+{
+    while (true)
+    {
+        const userInput = prompt("Enter integer size n for new nxn grid (1-100):", "16");
+
+        if (userInput === null) return userInput;
+
+        const gridSize = Number(userInput);
+
+        if (Number.isInteger(gridSize) && (gridSize >= 1 && gridSize <= 100))
+        {
+            return gridSize;
+        }
+
+        alert("Invalid input. Value must be an integer within the range of 1-100.");
+    }
+}
+
+
+function deleteGrid(gridContainer: Element): void
+{
+    const rows = [...gridContainer.children];
+
+    rows.forEach(row => gridContainer.removeChild(row));
 }
