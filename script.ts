@@ -79,7 +79,7 @@ function paintTiles(event: Event, paintbrushType: string): void
     {
         // Prevent a scenario where the whole grid container element would be
         // colored at once when the target of the event is the grid container itself
-        if (event.target.id === "grid-container") return;
+        if (!event.target.classList.contains("tile")) return;
 
         if (event.target.classList.contains("colored")) return;
 
@@ -89,7 +89,7 @@ function paintTiles(event: Event, paintbrushType: string): void
 }
 
 
-function getPaintColor(paintbrushType: string)
+function getPaintColor(paintbrushType: string): string
 {
     switch (paintbrushType)
     {
