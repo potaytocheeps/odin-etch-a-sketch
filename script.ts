@@ -1,4 +1,3 @@
-let paintbrushType = "single-color";
 initializeEtchASketch();
 
 
@@ -52,14 +51,10 @@ function addGridFunctionality(gridContainer: Element): void
     gridContainer.addEventListener("click", (event) => {
         gridContainer.classList.toggle("painting");
 
-        // Ensure that the tile that is clicked on gets painted, if not already colored
-        if (event.target instanceof HTMLDivElement)
-        {
-            if (!event.target.classList.contains("colored"))
-            {
-                event.target.style.backgroundColor = getPaintColor(paintbrushType);
-            }
-        }
+        let paintbrushType = "single-color";
+
+        // Ensure that the tile that is clicked on also gets painted
+        paintTiles(event, paintbrushType);
 
         function toggleGridPainting (event: Event)
         {
@@ -78,6 +73,22 @@ function addGridFunctionality(gridContainer: Element): void
 }
 
 
+function paintTiles(event: Event, paintbrushType: string): void
+{
+    if (event.target instanceof HTMLDivElement)
+    {
+        // Prevent a scenario where the whole grid container element would be
+        // colored at once when the target of the event is the grid container itself
+        if (event.target.id === "grid-container") return;
+
+        if (event.target.classList.contains("colored")) return;
+
+        event.target.classList.add("colored");
+        event.target.style.backgroundColor = getPaintColor(paintbrushType);
+    }
+}
+
+
 function getPaintColor(paintbrushType: string)
 {
     switch (paintbrushType)
@@ -88,23 +99,6 @@ function getPaintColor(paintbrushType: string)
             return getRandomColor();
         default:
             return "red";
-    }
-}
-
-
-function paintTiles(event: Event, paintbrushType: string): void
-{
-    if (event.target instanceof HTMLDivElement)
-    {
-        console.log("painting");
-        // Prevent a scenario where the whole grid container element would be
-        // colored at once when the target of the event is the grid container itself
-        if (event.target.id === "grid-container") return;
-
-        if (event.target.classList.contains("colored")) return;
-
-        event.target.classList.add("colored");
-        event.target.style.backgroundColor = getPaintColor(paintbrushType);
     }
 }
 
